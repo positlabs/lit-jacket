@@ -1,0 +1,43 @@
+{
+	"github": {
+		"url": "",
+		"user": "devtool4",
+		"token": "378fd303c9ccef0bdaf2d171113986e9da946f82",
+		"secret": "getvalentinesdayoff20170214",
+		"repo": "https://378fd303c9ccef0bdaf2d171113986e9da946f82@github.com/tooldigital/reddi-wip-valentines-2016.git"
+	},
+	"control-panel": {
+		"port": 80,
+		"address": "litjacketpi.local",
+	},
+	"api": {
+		"localPort": 3020,
+		"port": 80,
+		"address": "http://pgtool.local:3020",
+		"url": "https://api.valentinesdayoff.com",
+		"token": "gfedcba"
+	},
+	"www": {
+		"localPort": 3000,
+		"port": 80,
+		"address": "https://www.valentinesdayoff.com",
+		"url": "https://www.valentinesdayoff.com",
+		"stage_url": "https://stage-www.valentinesdayoff.com"
+	},
+	"mongodb": {
+		"localPort": 27017,
+		"port": 27017,
+		"address": "mongodb://localhost:27017/valentinesdayoff"
+	},
+	"renderer": {
+		"localPort": 3030,
+		"port": 3030,
+		"address": "http://pgtool.local:3030"
+	},
+	"webhooks": {
+		"localPort": 3050,
+		"port": 85,
+		"url": "http://52.38.169.144:85",
+		"address": "http://pgtool.local:3050"
+	}
+}

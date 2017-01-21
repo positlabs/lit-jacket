@@ -1,0 +1,20 @@
+{
+  "*": {
+    "core": {
+      "customFileTypes": {
+        "text.html.jsp": [
+          "ust"
+        ],
+        "C": [
+          "vert",
+          "frag"
+        ]
+      },
+      "editor": {
+        "softTabs": false,
+        "tabLength": 1,
+        "tabType": "hard"
+      }
+    }
+  }
+}
