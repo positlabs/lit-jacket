@@ -1,5 +1,6 @@
 const path = require( 'path' );
-var Promise = require( 'bluebird' );
+const Promise = require( 'bluebird' );
+const getPixels = require( 'get-pixels' );
 
 const route = ( req, res ) => {
 	

@@ -1,5 +1,5 @@
 const path = require( 'path' );
-var Promise = require( 'bluebird' );
+const Promise = require( 'bluebird' );
 
 const route = ( req, res ) => {
 	
