@@ -1,23 +1,22 @@
 {
-  "name": "reddi-wip-valentines-2016",
+  "name": "litjacket",
   "version": "0.0.1",
-  "description": "ReddiWip Valentines Day Off Site",
+  "description": "lit jacket",
   "main": "start.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "find ./domains/* -maxdepth 2 -name package.json -execdir npm install \\;",
     "rebuild": ""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tooldigital/reddi-wip-valentines-2016.git"
+    "url": "git+https://github.com/gunderson/litjacket.git"
   },
   "author": "patrick@toolofna.com",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/tooldigital/reddi-wip-valentines-2016/issues"
+    "url": "https://github.com/gunderson/litjacket/issues"
   },
-  "homepage": "https://github.com/tooldigital/reddi-wip-valentines-2016#readme",
+  "homepage": "https://github.com/gunderson/litjacket#readme",
   "dependencies": {
     "babel": "^6.5.2",
     "babel-preset-es2015": "^6.22.0",
@@ -35,6 +34,5 @@
     "rpio": "^0.9.14"
   },
   "devDependencies": {
-    "grunt-fontina": "^0.1.6"
   }
 }
