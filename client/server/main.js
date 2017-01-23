@@ -1,6 +1,6 @@
 require('babel-register')({
-	presets: ['preset-es2015']
+	presets: ['preset-es2015'],
+	plugins: ['transform-runtime']
 });
-require('babel-runtime');
 
 require('./js/test.js');
