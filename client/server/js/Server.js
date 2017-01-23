@@ -30,11 +30,11 @@ class Server {
 		// ---------------------------------------------------------
 		// Dynamic Routes
 
-		app.get( '/pwm/:id/:duty', require( './routes/gpio' ) );
+		app.get( '/pwm/:id/:duty', require( './routes/pmw' ) );
 		app.get( '/gpio/:id/:state', require( './routes/gpio' ) );
 		app.get( '/sensor/:id', require( './routes/sensor' ) );
-		app.get( '/pixels', require( './routes/pixel' ) );
-		app.post( '/pixels', require( './routes/pixel' ) );
+		app.get( '/pixels', require( './routes/get-pixels' ) );
+		app.post( '/pixels', require( './routes/post-pixels' ) );
 
 		// ---------------------------------------------------------
 		// Static Routes
@@ -48,7 +48,7 @@ class Server {
 
 		// ---------------------------------------------------------
 		// Start Server
-		app.listen( env.port, function() {} );
+		app.listen( 80, function() {} );
 	}
 }
 
