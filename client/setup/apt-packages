@@ -1,8 +1,13 @@
-gcc
-g++
-make
-tar
-python
-avahi-daemon
-git
-cairo
+python \
+gcc \
+g++ \
+make \
+screen \
+openssh-sftp-server \
+git \
+git-https \
+block-mount \
+kmod-fs-ext4 \
+kmod-usb-storage-extras \
+nodejs \
+npm

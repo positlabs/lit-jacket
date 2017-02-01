@@ -1,41 +1,72 @@
-// import * as px from 'rpi-ws281x-native';
+// var five = require( 'johnny-five' );
+// var Raspi = require( 'raspi-io' );
+const Promise = require( 'bluebird' );
+const SerialPort = require( 'serialport' );
+const port = new SerialPort( '/dev/ttyAMA0', {
+	// autoOpen: false,
+	baudRate: 3000000,
+	dataBits: 8,
+	parity: 'none',
+	stopBits: 1,
+} );
+const emptyBuffer = Buffer.from( [] );
+let loopTimeout = null;
 
-var ws281x = require('rpi-ws281x-native');
+port.on( 'open', function( err ) {
+	if ( err ) throw new Error( err );
+	loop( 1000 );
+	// sendCommand( 0, Buffer.from( [
+	// 		255, 0, 0,
+	// 		0, 255, 0
+	// 	] ) )
+	// 	.catch( ( err ) => {
+	// 		throw new Error( err );
+	// 	} );
+} );
 
-var NUM_LEDS = parseInt(process.argv[2], 10) || 10,
-    pixelData = new Uint32Array(NUM_LEDS);
+// open errors will be emitted as an error event
+port.on( 'error', function( err ) {
+	console.log( 'Error: ', err.message );
+} )
 
-ws281x.init(NUM_LEDS);
-
-// ---- trap the SIGINT and reset before exit
-process.on('SIGINT', function () {
-  ws281x.reset();
-  process.nextTick(function () { process.exit(0); });
-});
-
-
-// ---- animation-loop
-var offset = 0;
-setInterval(function () {
-  for (var i = 0; i < NUM_LEDS; i++) {
-    pixelData[i] = colorwheel((offset + i) % 256);
-  }
-
-  offset = (offset + 1) % 256;
-  ws281x.render(pixelData);
-}, 1000 / 30);
-
-console.log('Press <ctrl>+C to exit.');
-
-
-// rainbow-colors, taken from http://goo.gl/Cs3H0v
-function colorwheel(pos) {
-  pos = 255 - pos;
-  if (pos < 85) { return rgb2Int(255 - pos * 3, 0, pos * 3); }
-  else if (pos < 170) { pos -= 85; return rgb2Int(0, pos * 3, 255 - pos * 3); }
-  else { pos -= 170; return rgb2Int(pos * 3, 255 - pos * 3, 0); }
+function loop( frameDelay = 1000 ) {
+	loopTimeout = setTimeout( () => {
+		sendCommand( 1 )
+			.then( ( cmdBuffer ) => {
+				console.log( cmdBuffer );
+			} )
+			.catch( ( err ) => {
+				throw new Error( err );
+			} );
+		loop( frameDelay );
+	}, frameDelay );
 }
 
-function rgb2Int(r, g, b) {
-  return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+function sendCommand( cmd, dataBuffer = emptyBuffer ) {
+	let cmdBuffer = Buffer.alloc( dataBuffer.length + 1 );
+	cmdBuffer[ 0 ] = cmd;
+	// unshift the command into the array
+	for ( let i = 0; i < dataBuffer.length; i++ ) {
+		cmdBuffer[ i + 1 ] = dataBuffer[ i ];
+	}
+
+	let deferred = defer();
+	port.write( cmdBuffer, ( err ) => {
+		if ( err ) deferred.reject( err );
+		deferred.resolve( cmdBuffer );
+	} );
+	return deferred.promise;
+}
+
+function defer() {
+	let resolve, reject,
+		promise = new Promise( ( _resolve, _reject ) => {
+			resolve = _resolve;
+			reject = _reject;
+		} );
+	return {
+		promise,
+		resolve,
+		reject
+	};
 }
