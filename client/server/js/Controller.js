@@ -1,19 +1,13 @@
 const path = require( 'path' );
 const fs = require( 'fs' );
+const EventEmitter = require( 'events' );
 const chalk = require( 'chalk' );
 const _ = require( 'lodash' );
 const Promise = require( 'bluebird' );
 const getPixels = Promise.promisify( require( 'get-pixels' ) );
 const SerialPort = require( 'serialport' );
-const port = new SerialPort( '/dev/ttyAMA0', {
-	autoOpen: false,
-	baudRate: 3000000,
-	dataBits: 8,
-	parity: 'none',
-	stopBits: 1,
-} );
 
-port.on = Promise.promisify( port.on );
+let port;
 
 const COMMANDS = {
 	RESET: 0,
@@ -63,24 +57,63 @@ let pixelArrays = [
 // SETUP
 // ------------------------------------------------------------
 
-function setup() {
-	let portOpenPromise = port.on( 'open' );
-	let getPixelsPromise = getPixels( path.join( imagePath, colormapFileName ) )
+class Controller extends EventEmitter {
+	constructor() {
+		let setupPromise = Promise.all( [
+			setupPort(),
+			setColormap( path.join( imagePath, colormapFileName ) )
+		] );
+
+		port.open();
+
+		return setupPromise.then( play )
+			.catch( throwError );
+	}
+
+	setColormap( file ) {
+		setColormap.apply( this, arguments );
+	}
+
+	get pixels() {
+		return pixelArrays;
+	}
+
+	play() {
+		play();
+	}
+
+	stop() {
+		stop();
+	}
+
+	reset() {
+		reset();
+	}
+}
+
+function setupPort() {
+	port = new SerialPort( '/dev/ttyAMA0', {
+		autoOpen: false,
+		baudRate: 3000000,
+		dataBits: 8,
+		parity: 'none',
+		stopBits: 1,
+	} );
+	port.on = Promise.promisify( port.on );
+	port.on( 'error' )
+		.catch( ( err ) => console.error( 'Error: ', err.message ) )
+	return port.on( 'open' );
+}
+
+function setColormap() {
+	return getPixels.apply( this, arguments )
 		.then( ( px ) => {
 			colormapData = px;
 			pixels = px.data;
 			w = px.shape[ 0 ];
 			h = px.shape[ 1 ];
 			pxdepth = px.shape[ 2 ];
-		} )
-	let setupPromise = Promise.all( [ portOpenPromise, getPixelsPromise ] )
-
-	port.on( 'error' )
-		.catch( ( err ) => console.error( 'Error: ', err.message ) )
-	port.open();
-
-	return setupPromise.then( play )
-		.catch( throwError );
+		} );
 }
 
 // ------------------------------------------------------------
@@ -200,10 +233,4 @@ function throwError( err ) {
 // MODULIZE
 // ------------------------------------------------------------
 
-module.exports = {
-	setup,
-	setColorMapName,
-	play,
-	stop,
-	reset
-}
+module.exports = Controller;
